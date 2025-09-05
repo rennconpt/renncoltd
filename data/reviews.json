@@ -1,8 +1,23 @@
 [
   {
+    "name": "Alison Gosling",
+    "rating": 5,
+    "text": "Nathan & Ben recently did a garden renovation for us and we couldn\u2019t be happier with it. They came up with the design and went over and above to deliver it, including overcoming some challenges. Would highly recommend them and wouldn\u2019t hesitate to have them do any work!"
+  },
+  {
     "name": "Paul Salter",
     "rating": 5,
-    "text": "We bought a new home and needed a new pitched roof and a new flat roof. Nathan and Ben are hardworking, going above and beyond to make sure our home was safe and protected. They resolved bigger issues with the flat roof so it now fully protects our home. We cannot thank them enough. Both roofs look amazing \u2014 the best looking in the street. Reliable, clean, kept us updated with videos/photos so we were aware of all stages of the roof replacement. 10/10 thank you!!"
+    "text": "We bought a new home and needed a new pitched roof and a new flat roof. Nathan and Ben are hardworking, going above and beyond to make sure our home was safe and protected when it poured down. They resolved bigger issues with the flat roof so it now fully protects our home. We cannot thank them enough. Both roofs look amazing \u2014 the best looking in the street. Reliable, clean, and kept us fully updated with videos and photographs throughout the roof replacement. 10/10 Thank you!!"
+  },
+  {
+    "name": "Martyn Evans",
+    "rating": 5,
+    "text": "Great service, very friendly, wouldn't hesitate to recommend."
+  },
+  {
+    "name": "Mary Woowoo",
+    "rating": 5,
+    "text": "Great job, decent price, did as I asked \u2014 would definitely recommend."
   },
   {
     "name": "Dan Hadley",
@@ -18,25 +33,5 @@
     "name": "Jason Hulbert",
     "rating": 5,
     "text": "Brilliant experience with this company. Highly recommended at brilliant prices."
-  },
-  {
-    "name": "Maria Davies",
-    "rating": 5,
-    "text": "Had Ben to put a TV on the wall."
-  },
-  {
-    "name": "Julie Smith",
-    "rating": 5,
-    "text": "Ben Price came to my property and worked on my satellite dish. Very helpful and polite \u2014 would definitely use again."
-  },
-  {
-    "name": "Martyn Evans",
-    "rating": 5,
-    "text": "Great service, very friendly \u2014 wouldn\u2019t hesitate to recommend."
-  },
-  {
-    "name": "Mary Woowoo",
-    "rating": 5,
-    "text": "Great job, decent price, did as I asked \u2014 would definitely recommend."
   }
 ]
