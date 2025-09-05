@@ -5,34 +5,25 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 .topbar a{display:inline-flex;gap:8px;align-items:center;color:#e8ecf3;text-decoration:none;opacity:.95}.topbar a:hover{opacity:1}
 .site-header{position:sticky;top:0;background:rgba(11,12,16,.75);backdrop-filter:blur(10px);border-bottom:1px solid #1b1d25;z-index:20}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 0}.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--text)}
-.logo{height:50px;border-radius:10px}.nav a{color:var(--muted);text-decoration:none;margin-left:18px}.nav a:hover{color:var(--text)}
+.logo{height:68px;border-radius:10px}.nav a{color:var(--muted);text-decoration:none;margin-left:18px}.nav a:hover{color:var(--text)}
 .hero{background:linear-gradient(180deg, rgba(76,201,240,.12), rgba(0,0,0,0));padding:72px 0 56px}.hero h1{font-size:clamp(28px,4vw,48px);margin:0 0 10px}.hero p{max-width:60ch;color:var(--muted)}
 .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.btn{display:inline-block;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700;border:1px solid #2a2d37}
 .btn.primary{background:var(--brand);color:#061018;border-color:transparent}.btn.ghost{background:transparent;color:var(--text)}
 .section{padding:56px 0}.section.alt{background:#0f1117;border-block:1px solid #171924}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}.card{background:var(--panel);padding:18px;border:1px solid #191b25;border-radius:16px;box-shadow:var(--shadow)}
-.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.review{background:var(--panel);border:1px solid #191b25;border-radius:16px;padding:18px}
-.footer{padding:24px 0;color:#9aa0ac}.badges{display:flex;gap:10px;flex-wrap:wrap;list-style:none;padding:0;margin:14px 0 0}
-.badges li{background:var(--panel);border:1px solid #191b25;padding:8px 12px;border-radius:999px;font-weight:600}
-/* FAB with safe-area */
-.fab-whatsapp{position:fixed;right:calc(14px + env(safe-area-inset-right));bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;background:#25D366;color:#061018;border:none;border-radius:999px;display:flex;align-items:center;gap:10px;padding:12px 16px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.35);text-decoration:none}
-.fab-whatsapp img{width:22px;height:22px}.fab-whatsapp:hover{transform:translateY(-1px)}
-/* Carousel */
-.carousel{position:relative}.carousel-track{display:flex;gap:16px;scroll-behavior:smooth;overflow:hidden}
-.carousel .review{min-width:calc((100% - 32px)/3)}
-.carousel .arrow{position:absolute;top:50%;transform:translateY(-50%);background:#0f1117;border:1px solid #191b25;border-radius:999px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.85}
-.carousel .arrow:hover{opacity:1}
-.carousel .arrow.left{left:-6px}.carousel .arrow.right{right:-6px}
-@media (max-width:900px){.carousel .review{min-width:calc((100% - 16px)/2)}}
-@media (max-width:640px){.carousel .review{min-width:100%} .fab-whatsapp span{display:none} .topbar .inner{justify-content:center}}
-
-/* r14 tweaks */
-.logo{height:68px;border-radius:10px}
-@media (max-width:640px){.logo{height:56px}}
 .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;align-items:start}
 .gallery figure{margin:0}
 .gallery img{display:block;width:100%;height:auto;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-.carousel-track{display:flex;gap:16px;overflow:hidden;scroll-behavior:smooth}
-.carousel .review{min-width:calc((100% - 48px)/4)}
+.footer{padding:24px 0;color:#9aa0ac}.badges{display:flex;gap:10px;flex-wrap:wrap;list-style:none;padding:0;margin:14px 0 0}
+.badges li{background:var(--panel);border:1px solid #191b25;padding:8px 12px;border-radius:999px;font-weight:600}
+/* FAB */
+.fab-whatsapp{position:fixed;right:calc(14px + env(safe-area-inset-right));bottom:calc(14px + env(safe-area-inset-bottom));z-index:50;background:#25D366;color:#061018;border:none;border-radius:999px;display:flex;align-items:center;gap:10px;padding:12px 16px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.35);text-decoration:none}
+.fab-whatsapp img{width:22px;height:22px}.fab-whatsapp:hover{transform:translateY(-1px)}
+/* Carousel */
+.carousel{position:relative}.carousel-track{display:flex;gap:16px;overflow:hidden;scroll-behavior:smooth}
+.carousel .review{min-width:calc((100% - 48px)/4);background:var(--panel);border:1px solid #191b25;border-radius:16px;padding:18px}
+.carousel .arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:999px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.45);backdrop-filter:blur(6px)}
+.carousel .arrow:hover{background:rgba(255,255,255,.28)}
+.carousel .arrow.left{left:-6px}.carousel .arrow.right{right:-6px}
 @media (max-width:1024px){.carousel .review{min-width:calc((100% - 16px)/2)}}
-@media (max-width:640px){.carousel .review{min-width:100%}}
+@media (max-width:640px){.carousel .review{min-width:100%} .fab-whatsapp span{display:none} .topbar .inner{justify-content:center}}

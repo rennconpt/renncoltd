@@ -1,7 +1,7 @@
 (function(){
   var y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
 
-  // Gallery loader only on /gallery.html
+  // Gallery loader only on gallery page
   const onGallery = /\/gallery\.html$/.test(location.pathname) || location.pathname === '/gallery';
   const g=document.getElementById('gallery');
   if(onGallery && g){
