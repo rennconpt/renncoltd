@@ -309,3 +309,33 @@
     startCollageLoop();
   }
 })(); 
+
+
+// r23-full-hero-fixed2b: robust fallback if video can't play
+(function(){
+  const vid = document.getElementById('heroVid');
+  const img = document.getElementById('heroImg');
+  if(!vid || !img) return;
+
+  function startLoop(){
+    if (vid && vid.parentNode) { try{vid.pause()}catch(_){ } vid.parentNode.removeChild(vid); }
+    img.style.display = 'block';
+  }
+
+  // If video errors or stalls, fallback quickly
+  vid.addEventListener('error', startLoop, { once:true });
+  vid.addEventListener('stalled', ()=> setTimeout(startLoop, 600), { once:true });
+
+  // If not ready to play within 1.2s, fallback too (prevents blank)
+  setTimeout(()=>{
+    const ready = vid.readyState >= 3; // HAVE_FUTURE_DATA
+    if(!ready && document.getElementById('heroVid')) startLoop();
+  }, 1200);
+
+  // Usual autoplay kickers
+  const kick = ()=>{ try{ const p=vid.play(); if(p&&p.catch){ p.catch(()=>{});} }catch(_){}};
+  kick();
+  vid.addEventListener('canplay', kick, { once:true });
+  window.addEventListener('touchstart', kick, { once:true, passive:true });
+  window.addEventListener('click', kick, { once:true });
+})(); 
