@@ -350,3 +350,7 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
   display:none; z-index:5;
 }
 #heroKick.visible{ display:block; }
+
+
+/* r23 full hero fixed4: slightly longer crossfade for smoothness */
+#hero-stage .fade-img{ transition: opacity .8s ease; }

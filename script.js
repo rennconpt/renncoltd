@@ -432,3 +432,137 @@
     startCollage();
   }
 })();
+
+
+// r23-full-hero-fixed4: single-init robust hero
+(function(){
+  if (window.__heroInit) return; // prevent duplicate init
+  window.__heroInit = true;
+
+  const stage = document.getElementById('hero-stage'); if(!stage) return;
+  const vid   = document.getElementById('heroVid');
+  const imgA  = document.getElementById('heroImgA');
+  const imgB  = document.getElementById('heroImgB');
+  const kick  = document.getElementById('heroKick');
+
+  const slides = ['/assets/hero-1.jpg','/assets/hero-2.jpg','/assets/hero-3.jpg'];
+  slides.forEach(src => { const i = new Image(); i.src = src; });
+
+  let pos = 0, showA = true, loopTimer = null, fadeRAF = null;
+
+  function showKick(){ kick && kick.classList.add('visible'); }
+  function hideKick(){ kick && kick.classList.remove('visible'); }
+
+  function cleanupVideo(){
+    if(vid){
+      try{ vid.pause(); }catch(_){}
+      vid.removeAttribute('src');
+      while(vid.firstChild) vid.removeChild(vid.firstChild);
+      if(vid.parentNode) vid.parentNode.removeChild(vid);
+    }
+    hideKick();
+  }
+
+  function crossfadeTo(nextSrc){
+    const show = showA ? imgB : imgA;
+    const hide = showA ? imgA : imgB;
+    show.src = nextSrc;
+    // Force reflow before toggling to ensure CSS transition runs
+    // and use rAF for smoother timing
+    if (fadeRAF) cancelAnimationFrame(fadeRAF);
+    fadeRAF = requestAnimationFrame(()=>{
+      hide.classList.remove('show');
+      requestAnimationFrame(()=> show.classList.add('show'));
+    });
+    showA = !showA;
+  }
+
+  function startCollage(){
+    cleanupVideo();
+    imgA.src = slides[pos];
+    imgA.classList.add('show');
+    if (loopTimer) clearInterval(loopTimer);
+    loopTimer = setInterval(()=>{
+      pos = (pos+1) % slides.length;
+      crossfadeTo(slides[pos]);
+    }, 4500);
+  }
+
+  function holdThenStart(){
+    setTimeout(startCollage, 2200);
+  }
+
+  // Autoplay + error handling
+  if (vid){
+    // Ensure attributes
+    vid.muted = true;
+    vid.setAttribute('playsinline','');
+    vid.setAttribute('webkit-playsinline','');
+    vid.autoplay = true;
+
+    // Add a <source> if missing (defensive)
+    if (!vid.querySelector('source')){
+      const s = document.createElement('source');
+      s.src = '/assets/hero-anim.mp4';
+      s.type = 'video/mp4';
+      vid.appendChild(s);
+      vid.load();
+    }
+
+    const tryPlay = () => {
+      try{
+        const p = vid.play();
+        if (p && p.catch) p.catch(()=>{});
+      }catch(_){}
+    };
+
+    // Try to play on multiple signals
+    tryPlay();
+    vid.addEventListener('canplay', tryPlay, {once:true});
+    window.addEventListener('touchstart', tryPlay, {once:true, passive:true});
+    window.addEventListener('click', tryPlay, {once:true});
+
+    if (kick){
+      // If not ready in 1s, show tap overlay
+      setTimeout(()=>{
+        if (document.getElementById('heroVid') && vid.readyState < 2){
+          showKick();
+        }
+      }, 1000);
+      kick.addEventListener('click', ()=>{ tryPlay(); hideKick(); }, {once:true});
+    }
+
+    // When video plays, hide the overlay
+    vid.addEventListener('playing', hideKick);
+
+    // Natural end → hold → collage
+    vid.addEventListener('ended', holdThenStart, {once:true});
+
+    // Frame guard (ensures we don't cut early)
+    const guard = ()=>{
+      const alive = document.getElementById('heroVid');
+      if (!alive) return;
+      const d = isFinite(vid.duration) ? vid.duration : 0;
+      if (d>0 && vid.currentTime >= d - 0.06){ holdThenStart(); return; }
+      requestAnimationFrame(guard);
+    };
+    requestAnimationFrame(guard);
+
+    // If decoding fails or stalls, fallback to collage quickly (no blank)
+    const failToCollage = () => {
+      // Show poster for a moment then start collage
+      setTimeout(startCollage, 400);
+    };
+    vid.addEventListener('error', failToCollage, {once:true});
+    vid.addEventListener('stalled', failToCollage, {once:true});
+
+    // If still not 'playing' after 2.5s, fallback
+    setTimeout(()=>{
+      if (document.getElementById('heroVid') && vid.readyState < 2){
+        failToCollage();
+      }
+    }, 2500);
+  } else {
+    startCollage();
+  }
+})(); 
