@@ -95,3 +95,39 @@
 
   setInterval(()=> setActive((i+1)%slides.length), 5000);
 })();
+
+
+// r23-clean10: play logo animation once, then loop photos only
+(function(){
+  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
+  const slides = Array.from(wrap.querySelectorAll('.slide'));
+  if(slides.length < 2) return;
+
+  let i = 0; // start at animation slide (index 0)
+  let animPlayed = false;
+
+  function show(n){
+    slides[i].classList.remove('active');
+    const oldVid = slides[i].querySelector('video'); if(oldVid){ try{ oldVid.pause(); }catch(e){} }
+    i = n;
+    slides[i].classList.add('active');
+    const newVid = slides[i].querySelector('video'); if(newVid){ try{ newVid.currentTime=0; newVid.play(); }catch(e){} }
+  }
+
+  // When animation finishes (or after a timeout), go to first photo
+  const anim = slides[0].querySelector('video');
+  if(anim){
+    anim.addEventListener('ended', ()=>{ animPlayed = true; show(1); });
+    // fallback in case 'ended' won't fire due to loop attr; remove loop to allow ended
+    anim.removeAttribute('loop');
+  }
+  // safety: advance after 4.5s if no 'ended' fires
+  setTimeout(()=>{ if(!animPlayed){ animPlayed=true; show(1); } }, 4500);
+
+  // After start, loop photos (1..slides.length-1)
+  setInterval(()=>{
+    if(!animPlayed) return; // wait until after the intro
+    const isLastPhoto = (i >= 1) && (i === slides.length - 1);
+    show(isLastPhoto ? 1 : i + 1);
+  }, 5000);
+})();
