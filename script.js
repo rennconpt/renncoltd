@@ -476,3 +476,46 @@
     startImageLoop();
   }
 })(); 
+
+
+// r23-clean22: stronger mobile autoplay + longer PC hold
+(function(){
+  const vid = document.getElementById('heroVid'); if(!vid) return;
+
+  // Visibility-based play (autoplay only when in view)
+  try{
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          try{ const p = vid.play(); if(p&&p.catch){ p.catch(()=>{}); } }catch(_){}
+        } else {
+          try{ vid.pause(); }catch(_){}
+        }
+      });
+    }, {threshold: 0.25});
+    io.observe(vid);
+  }catch(_){}
+
+  // One-tap user gesture fallback (iOS Safari, some Android)
+  const kick = ()=>{ 
+    try{ const p=vid.play(); if(p&&p.catch){ p.catch(()=>{});} }catch(_){}
+    window.removeEventListener('touchstart', kick, {passive:true});
+    window.removeEventListener('click', kick);
+  };
+  window.addEventListener('touchstart', kick, {passive:true, once:true});
+  window.addEventListener('click', kick, {once:true});
+
+  // Extend fallback duration by +3000ms so it won't cut early on desktop
+  vid.addEventListener('loadedmetadata', ()=>{
+    const dur = (isFinite(vid.duration) && vid.duration>0) ? vid.duration : 7;
+    const ms = Math.max(10000, Math.round(dur*1000) + 3400); // +3.4s cushion
+    setTimeout(()=>{
+      // Only switch if the video is still present (intro hasn't ended naturally)
+      if(document.getElementById('heroVid')){
+        const evt = new Event('ended');
+        vid.dispatchEvent(evt);
+      }
+    }, ms);
+  }, {once:true});
+
+})(); 
