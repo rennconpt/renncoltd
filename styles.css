@@ -381,3 +381,11 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 .hero-slider.simple .slide.anim{ opacity:0; transition:opacity .4s ease; }
 .hero-slider.simple .bg-slide.active,
 .hero-slider.simple .slide.anim.active{ opacity:1; }
+
+
+/* r23-clean20: layering & safety */
+.hero-slider.simple{ position:relative; }
+.hero-slider.simple .slide.anim,
+.hero-slider.simple .bg-slide{ position:absolute; inset:0; pointer-events:none; }
+.hero-slider.simple .slide.anim{ z-index:2; }
+.hero-slider.simple .bg-slide{ z-index:1; }

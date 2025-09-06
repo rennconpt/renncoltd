@@ -355,3 +355,70 @@
     startLoop();
   }
 })(); 
+
+
+// r23-clean20: play intro fully, then remove it; no repeats behind photos
+(function(){
+  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
+
+  // If somehow multiple hero-sliders exist, keep the first and remove the rest
+  const dupes = document.querySelectorAll('#hero-slider'); 
+  if(dupes.length > 1){ for(let i=1;i<dupes.length;i++){ dupes[i].parentNode && dupes[i].parentNode.removeChild(dupes[i]); } }
+
+  const bgSlides = Array.from(wrap.querySelectorAll('.bg-slide'));
+  bgSlides.forEach(s=>{
+    const url = s.getAttribute('data-bg');
+    if(url){ s.style.backgroundImage = 'url("'+url+'")'; const i=new Image(); i.src=url; }
+  });
+  const introSlide = wrap.querySelector('.slide.anim');
+  const intro = document.getElementById('intro-anim');
+
+  let idx = -1; // -1 = intro
+
+  function showOnly(el){
+    wrap.querySelectorAll('.bg-slide, .slide.anim').forEach(e=>e.classList.remove('active'));
+    if(el){ el.classList.add('active'); }
+  }
+
+  function setActiveIndex(i){
+    idx = i;
+    if(i === -1) showOnly(introSlide);
+    else showOnly(bgSlides[i % bgSlides.length]);
+  }
+
+  function startLoop(){
+    if(bgSlides.length===0) return;
+    // Remove intro from DOM completely to avoid any z-order surprises
+    if(intro){ try{ intro.pause(); }catch(e){} }
+    if(introSlide && introSlide.parentNode){ introSlide.parentNode.removeChild(introSlide); }
+    let i = 0;
+    setActiveIndex(i);
+    setInterval(()=>{ i = (i+1) % bgSlides.length; setActiveIndex(i); }, 4500);
+  }
+
+  // Start with intro
+  setActiveIndex(-1);
+
+  if(intro){
+    intro.muted = true; intro.playsInline = true; intro.autoplay = true;
+    const tryPlay = ()=>{ try{ const p=intro.play(); if(p&&p.catch){ p.catch(()=>{}); } }catch(e){} };
+    intro.addEventListener('canplay', tryPlay, {once:true});
+    tryPlay();
+
+    intro.addEventListener('ended', startLoop, { once: true });
+
+    // Fallback uses actual duration (metadata) plus buffer; minimum 7s
+    const setFallback = ()=>{
+      const dur = isFinite(intro.duration) && intro.duration>0 ? intro.duration : 7;
+      const ms = Math.max(7000, Math.round(dur*1000) + 600);
+      setTimeout(()=>{ 
+        // If intro is still present (no 'ended' fired), start loop now
+        if(document.getElementById('intro-anim')) startLoop(); 
+      }, ms);
+    };
+    if(isFinite(intro.duration) && intro.duration>0){ setFallback(); }
+    else { intro.addEventListener('loadedmetadata', setFallback, {once:true}); setTimeout(setFallback, 9000); }
+  } else {
+    startLoop();
+  }
+})(); 
