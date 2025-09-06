@@ -165,7 +165,7 @@
   if(introVid){
     introVid.addEventListener('ended', ()=>{ introFinished = true; show(1); });
     // safety timeout in case 'ended' doesn't fire
-    setTimeout(()=>{ if(!introFinished){ introFinished = True; show(1); } }, 6000);
+    setTimeout(()=>{ if(!introFinished){ introFinished = true; show(1); } }, 6000);
   }else{
     introFinished = true; show(1);
   }
@@ -176,4 +176,40 @@
     const atEnd = (i >= 1) && (i === slides.length - 1);
     show(atEnd ? 1 : i + 1);
   }, 5000);
+})();
+
+
+// r23-clean12: ensure hero images never crop on any device
+(function(){
+  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
+  const imgs = Array.from(wrap.querySelectorAll('.slide img'));
+  function fit(){
+    const rect = wrap.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+    imgs.forEach(img => {
+      const iw = img.naturalWidth || img.width;
+      const ih = img.naturalHeight || img.height;
+      if(!iw || !ih) return;
+      const ir = iw/ih, sr = W/H;
+      if(ir > sr){
+        // limited by width
+        img.style.width = '100%';
+        img.style.height = 'auto';
+      }else{
+        // limited by height
+        img.style.height = '100%';
+        img.style.width = 'auto';
+      }
+      img.style.objectFit = 'contain';
+      img.style.objectPosition = 'center center';
+    });
+  }
+  // run after images load
+  imgs.forEach(img => {
+    if(img.complete) return;
+    img.addEventListener('load', fit);
+  });
+  window.addEventListener('resize', fit);
+  setTimeout(fit, 50);
+  setTimeout(fit, 500);
 })();

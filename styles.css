@@ -220,3 +220,7 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 }
 /* neutralize any aspect-ratio hacks from earlier */
 .hero-slider .slide img{ aspect-ratio:auto !important; }
+
+
+/* r23-clean12: keep slides neat */
+.hero-slider .slide{overflow:hidden}
