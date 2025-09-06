@@ -213,3 +213,36 @@
   setTimeout(fit, 50);
   setTimeout(fit, 500);
 })();
+
+
+// r23-clean14: simple show/hide slider (intro once, then photos loop)
+(function(){
+  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
+  const slides = Array.from(wrap.querySelectorAll('.slide')); if(slides.length < 2) return;
+  const intro = document.getElementById('intro-anim');
+
+  let i = 0; // start on intro
+  let introDone = false;
+
+  function show(n){
+    slides[i].classList.remove('active');
+    const oldVid = slides[i].querySelector('video'); if(oldVid){ try{ oldVid.pause(); }catch(e){} }
+    i = n % slides.length;
+    slides[i].classList.add('active');
+    const newVid = slides[i].querySelector('video'); if(newVid){ try{ newVid.currentTime=0; newVid.play(); }catch(e){} }
+  }
+
+  if(intro){
+    intro.removeAttribute('loop'); // play once
+    intro.addEventListener('ended', ()=>{ introDone = true; show(1); });
+    setTimeout(()=>{ if(!introDone){ introDone = true; show(1); } }, 6000);
+  }else{
+    introDone = true; show(1);
+  }
+
+  setInterval(()=>{
+    if(!introDone) return;
+    const lastPhoto = slides.length - 1;
+    show(i >= lastPhoto ? 1 : i + 1);
+  }, 5000);
+})();
