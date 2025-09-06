@@ -276,3 +276,40 @@
   window.addEventListener('resize', fit);
   const ro = new ResizeObserver(fit); ro.observe(wrap);
 })(); 
+
+
+// r23-clean18: background-slide loader + loop (no crop)
+(function(){
+  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
+  const slides = Array.from(wrap.querySelectorAll('.bg-slide'));
+  slides.forEach(s => { const url = s.getAttribute('data-bg'); if(url){ const img = new Image(); img.src = url; s.style.backgroundImage = 'url("'+url+'")'; } });
+  const introSlide = wrap.querySelector('.slide.anim');
+  const intro = document.getElementById('intro-anim');
+
+  let i = -1; // -1 = intro
+
+  function setActive(idx){
+    wrap.querySelectorAll('.bg-slide.active, .slide.anim.active').forEach(el=>el.classList.remove('active'));
+    if(idx === -1){
+      if(introSlide){ introSlide.classList.add('active'); if(intro){ try{ intro.currentTime=0; intro.play(); }catch(e){} } }
+    } else {
+      const s = slides[idx % slides.length]; if(s){ s.classList.add('active'); }
+    }
+  }
+
+  function startLoop(){
+    i = 0;
+    setActive(i);
+    setInterval(()=>{ i = (i+1) % slides.length; setActive(i); }, 4500);
+  }
+
+  if(intro){
+    intro.addEventListener('ended', startLoop, { once:true });
+    // Safety: if 'ended' doesn't fire (mobile), start after 4.5s
+    setTimeout(()=>{
+      if(i === -1){ startLoop(); }
+    }, 5000);
+  }else{
+    startLoop();
+  }
+})(); 
