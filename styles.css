@@ -67,3 +67,31 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
   .cta-row{gap:10px}
   .cta-row .btn{padding:11px 16px}
 }
+
+
+/* r23-clean6: Collage slot height + animated Rennco background (no image crop) */
+.hero-slider{position:relative;border-radius:18px;overflow:hidden;height:420px;background:#0f1117}
+@media (max-width:980px){.hero-slider{height:360px}}
+@media (max-width:720px){.hero-slider{height:300px}}
+@media (max-width:520px){.hero-slider{height:260px}}
+
+/* Animated background visible wherever images don't cover (letterbox areas) */
+.hero-slider::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  background: linear-gradient(135deg,#0f1117 0%,#10202a 35%,#27d3cb 50%,#10202a 65%,#0f1117 100%);
+  background-size: 300% 300%;
+  animation: renncoFlow 18s linear infinite;
+  filter: saturate(1.1) brightness(.9);
+}
+@keyframes renncoFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* Images show fully without crop and sit above the animated bg */
+.hero-slider img{
+  position:relative; z-index:1;
+  width:100%; height:100%;
+  object-fit:contain !important; background:transparent;
+}
