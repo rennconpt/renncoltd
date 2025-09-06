@@ -50,3 +50,26 @@
   let i=0; slides[0].classList.add('active');
   setInterval(()=>{ slides[i].classList.remove('active'); i=(i+1)%slides.length; slides[i].classList.add('active'); }, 5000);
 })();
+
+
+// r23-clean8: mixed image/video hero slider rotation
+(function(){
+  const slider = document.getElementById('hero-slider');
+  if(!slider) return;
+  const slides = Array.from(slider.querySelectorAll('.slide'));
+  if(!slides.length) return;
+
+  let i = slides.findIndex(s=>s.classList.contains('active'));
+  if(i<0){ i=0; slides[0].classList.add('active'); }
+
+  function next(){
+    slides[i].classList.remove('active');
+    i = (i+1) % slides.length;
+    slides[i].classList.add('active');
+    // restart video if it's a video slide
+    if(slides[i].tagName === 'VIDEO'){
+      try { slides[i].currentTime = 0; slides[i].play(); } catch(e){}
+    }
+  }
+  setInterval(next, 5000);
+})();

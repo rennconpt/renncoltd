@@ -113,3 +113,24 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 
 /* In case previous CSS used aspect-ratio on the image, neutralize it */
 .hero-slider img{aspect-ratio:auto !important}
+
+
+/* r23-clean8: hero slider with background animation and no image crop */
+.hero-slider{position:relative;border-radius:16px;overflow:hidden;height:420px;background:#0f1117}
+@media (max-width:980px){.hero-slider{height:360px}}
+@media (max-width:720px){.hero-slider{height:300px}}
+@media (max-width:520px){.hero-slider{height:260px}}
+
+.hero-slider .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35;z-index:0}
+
+.hero-slider .slide{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .6s ease;z-index:1;background:transparent}
+.hero-slider .slide.active{opacity:1}
+
+/* Show FULL image with no cropping for IMG slides */
+.hero-slider img.slide{object-fit:contain !important}
+
+/* Video slides fill the frame for impact */
+.hero-slider video.slide{object-fit:cover}
+
+/* Ensure no earlier rules interfere */
+.hero-slider img.slide, .hero-slider video.slide{top:auto !important;left:auto !important;right:auto !important;bottom:auto !important;transform:none !important}
