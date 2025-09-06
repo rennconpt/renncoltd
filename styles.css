@@ -366,3 +366,20 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
   background: #0e1117;
   display: block;
 }
+
+
+/* r23 full hero fixed6: ultra-specific video sizing to match images */
+#hero-stage > video#heroVid {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  background: #0e1117 !important;
+  display: block !important;
+  z-index: 1 !important;
+}
+/* Ensure image layers sit above when shown */
+#hero-stage .fade-img.show { z-index: 2 !important; }
