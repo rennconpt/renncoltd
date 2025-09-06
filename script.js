@@ -246,3 +246,33 @@
     show(i >= lastPhoto ? 1 : i + 1);
   }, 5000);
 })();
+
+
+// r23-clean17: aspect-ratio fitter (no crop, no stretch)
+(function(){
+  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
+  function fit(){
+    const boxW = wrap.clientWidth, boxH = wrap.clientHeight;
+    const imgs = wrap.querySelectorAll('img.hero-img');
+    imgs.forEach(img => {
+      const iw = img.naturalWidth || img.videoWidth || img.width;
+      const ih = img.naturalHeight || img.videoHeight || img.height;
+      if(!iw || !ih || !boxW || !boxH) return;
+      const imgAR = iw/ih, boxAR = boxW/boxH;
+      if(imgAR > boxAR){
+        // image is wider than box -> fit width, limit height
+        img.style.width = '100%';
+        img.style.height = 'auto';
+        img.style.maxHeight = '100%';
+      }else{
+        // image is taller than box -> fit height, limit width
+        img.style.height = '100%';
+        img.style.width = 'auto';
+        img.style.maxWidth = '100%';
+      }
+    });
+  }
+  window.addEventListener('load', fit);
+  window.addEventListener('resize', fit);
+  const ro = new ResizeObserver(fit); ro.observe(wrap);
+})(); 
