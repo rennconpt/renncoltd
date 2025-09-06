@@ -422,3 +422,57 @@
     startLoop();
   }
 })(); 
+
+
+// r23-clean21: minimal hero controller
+(function(){
+  const stage = document.getElementById('hero-stage'); if(!stage) return;
+  const vid = document.getElementById('heroVid');
+  const img = document.getElementById('heroImg');
+  const slides = ['/assets/hero-1.jpg','/assets/hero-2.jpg','/assets/hero-3.jpg'];
+
+  // Preload
+  const cache = slides.map(src=>{ const i=new Image(); i.src=src; return i; });
+
+  let timer = null, pos = 0;
+
+  function startImageLoop(){
+    // Hide and remove the video entirely
+    if(vid){
+      try{ vid.pause(); }catch(e){} 
+      if(vid.parentNode){ vid.parentNode.removeChild(vid); }
+    }
+    // Show the image element
+    img.style.display = 'block';
+    img.src = slides[pos];
+    // Rotate
+    timer = setInterval(()=>{
+      pos = (pos+1) % slides.length;
+      img.src = slides[pos];
+    }, 4500);
+  }
+
+  // Start with the intro video
+  if(vid){
+    vid.muted = true; vid.playsInline = true; vid.autoplay = true;
+    const tryPlay = ()=>{ try{ const p=vid.play(); if(p&&p.catch){ p.catch(()=>{}); } }catch(e){} };
+    vid.addEventListener('canplay', tryPlay, {once:true});
+    tryPlay();
+
+    // When the video actually ends, switch to images
+    vid.addEventListener('ended', startImageLoop, {once:true});
+
+    // Fallback: wait for real duration (or min 7s) then switch if needed
+    const fallback = ()=>{
+      const dur = (isFinite(vid.duration) && vid.duration>0) ? vid.duration : 7;
+      const ms = Math.max(7000, Math.round(dur*1000) + 400);
+      setTimeout(()=>{
+        if(document.getElementById('heroVid')) startImageLoop();
+      }, ms);
+    };
+    if(isFinite(vid.duration) && vid.duration>0) fallback();
+    else { vid.addEventListener('loadedmetadata', fallback, {once:true}); setTimeout(fallback, 9000); }
+  } else {
+    startImageLoop();
+  }
+})(); 
