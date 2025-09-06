@@ -383,3 +383,36 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 }
 /* Ensure image layers sit above when shown */
 #hero-stage .fade-img.show { z-index: 2 !important; }
+
+
+/* r23 full hero fixed7: identical sizing for video & photos via shared box */
+#hero-stage{ position:relative; overflow:hidden }
+#hero-box{
+  position:absolute;
+  inset:0;
+  /* Create identical visual inset for both video & images (tweak as needed) */
+  padding: 0 3.5%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0e1117;
+}
+#hero-box video,
+#hero-box img{
+  position:relative !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  object-fit:contain !important;
+  display:block !important;
+  background:#0e1117 !important;
+  border:0 !important;
+}
+#hero-box img.fade-img{
+  position:absolute !important;
+  inset:0 !important;
+  opacity:0; transition:opacity .8s ease;
+}
+#hero-box img.fade-img.show{ opacity:1; }
+#hero-stage .fade-img.show { z-index: 2 !important; }
