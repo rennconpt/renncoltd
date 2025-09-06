@@ -1,4 +1,5 @@
 (function(){
+  // year
   var y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
 
   // Gallery loader only on gallery page
@@ -6,7 +7,7 @@
   const g=document.getElementById('gallery');
   if(onGallery && g){
     const files=Array.from({length:200},(_,i)=>`/gallery/${i+1}.jpg`);
-    files.forEach(src=>{const img=new Image(); img.onload=()=>{const fig=document.createElement('figure'); fig.appendChild(img); g.appendChild(fig);}; img.src=src;});
+    files.forEach(src=>{const img=new Image(); img.onload=()=>{const fig=document.createElement('figure'); img.alt='Project photo by Rennco Ltd'; fig.appendChild(img); g.appendChild(fig);}; img.src=src;});
   }
 
   // Reviews carousel
@@ -19,9 +20,8 @@
         track.appendChild(d);
       });
       initCarousel();
-    }).catch(()=>{});
+    });
   }
-
   function initCarousel(){
     const left=document.querySelector('.carousel .left');
     const right=document.querySelector('.carousel .right');
@@ -39,4 +39,14 @@
     right.addEventListener('click', ()=>scrollToIndex(index+1));
     window.addEventListener('resize', ()=>scrollToIndex(index));
   }
+
+  // r17 hero slider rotation
+  (function(){
+    const slider = document.getElementById('hero-slider');
+    if(!slider) return;
+    const slides = Array.from(slider.querySelectorAll('img'));
+    if(!slides.length) return;
+    let i = 0; slides[0].classList.add('active');
+    setInterval(()=>{ slides[i].classList.remove('active'); i=(i+1)%slides.length; slides[i].classList.add('active'); }, 5000);
+  })();
 })();
