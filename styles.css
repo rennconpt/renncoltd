@@ -224,3 +224,24 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 
 /* r23-clean12: keep slides neat */
 .hero-slider .slide{overflow:hidden}
+
+
+/* r23-clean13: taller slot + images not full width (no crop, side animation visible) */
+.hero-slider{height:480px !important}
+@media (max-width:980px){.hero-slider{height:400px !important}}
+@media (max-width:720px){.hero-slider{height:320px !important}}
+@media (max-width:520px){.hero-slider{height:280px !important}}
+
+/* Do NOT let images fill the full width; center them so teal sides show */
+.hero-slider .slide img{
+  max-height:100% !important;
+  height:auto !important;
+  width:auto !important;
+  max-width:88% !important;   /* desktop default */
+}
+@media (max-width:980px){
+  .hero-slider .slide img{ max-width:92% !important; }
+}
+@media (max-width:720px){
+  .hero-slider .slide img{ max-width:96% !important; }
+}
