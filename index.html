@@ -32,20 +32,21 @@
     <div class="card" style="padding:0;overflow:hidden;border-radius:16px;margin-top:18px">
       
       
+      
       <div class="card" style="padding:0;overflow:hidden;border-radius:16px;margin-top:18px">
         <div class="hero-slider" id="hero-slider">
-          <video class="bg" src="/assets/hero-anim.mp4" autoplay muted loop playsinline></video>
+          <!-- Background animation (always running behind images) -->
+          <video class="bg" src="/assets/hero-anim.mp4" autoplay muted loop playsinline preload="auto"></video>
 
-          <img class="slide active" src="/assets/hero-1.jpg" alt="Rennco collage 1">
-          <video class="slide" src="/assets/hero-anim.mp4" autoplay muted loop playsinline></video>
-
-          <img class="slide" src="/assets/hero-2.jpg" alt="Rennco collage 2">
-          <video class="slide" src="/assets/hero-anim.mp4" autoplay muted loop playsinline></video>
-
-          <img class="slide" src="/assets/hero-3.jpg" alt="Rennco collage 3">
-          <video class="slide" src="/assets/hero-anim.mp4" autoplay muted loop playsinline></video>
+          <!-- Slides: animation (start) -> img1 -> img2 -> img3 -> animation (end) -->
+          <div class="slide anim active"><video src="/assets/hero-anim.mp4" autoplay muted loop playsinline preload="auto"></video></div>
+          <div class="slide"><img src="/assets/hero-1.jpg" alt="Rennco collage 1"></div>
+          <div class="slide"><img src="/assets/hero-2.jpg" alt="Rennco collage 2"></div>
+          <div class="slide"><img src="/assets/hero-3.jpg" alt="Rennco collage 3"></div>
+          <div class="slide anim"><video src="/assets/hero-anim.mp4" autoplay muted loop playsinline preload="auto"></video></div>
         </div>
       </div>
+
 
 
     </div>

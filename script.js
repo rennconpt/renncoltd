@@ -73,3 +73,25 @@
   }
   setInterval(next, 5000);
 })();
+
+
+// r23-clean9: simple slider rotation (anim -> img1 -> img2 -> img3 -> anim)
+(function(){
+  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
+  const slides = Array.from(wrap.querySelectorAll('.slide'));
+  if(!slides.length) return;
+  let i = slides.findIndex(s=>s.classList.contains('active'));
+  if(i<0){ i=0; slides[0].classList.add('active'); }
+
+  function setActive(n){
+    slides[i].classList.remove('active');
+    // Pause any playing video in old slide
+    const oldVid = slides[i].querySelector('video'); if(oldVid){ try{ oldVid.pause(); }catch(e){} }
+    i = n % slides.length;
+    slides[i].classList.add('active');
+    // Play video if new slide has one
+    const newVid = slides[i].querySelector('video'); if(newVid){ try{ newVid.currentTime=0; newVid.play(); }catch(e){} }
+  }
+
+  setInterval(()=> setActive((i+1)%slides.length), 5000);
+})();
