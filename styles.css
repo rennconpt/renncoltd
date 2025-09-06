@@ -95,3 +95,21 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
   width:100%; height:100%;
   object-fit:contain !important; background:transparent;
 }
+
+
+/* r23-clean7: hard overrides to prevent cropping/absolute positioning */
+.hero-slider{position:relative !important; overflow:hidden; border-radius:18px}
+.hero-slider img{
+  position:relative !important;
+  top:auto !important; left:auto !important; right:auto !important; bottom:auto !important;
+  inset:auto !important;
+  transform:none !important;
+  width:100% !important; height:100% !important;
+  object-fit:contain !important;
+  background:transparent !important;
+  z-index:1 !important;
+}
+.hero-slider::before{z-index:0 !important}
+
+/* In case previous CSS used aspect-ratio on the image, neutralize it */
+.hero-slider img{aspect-ratio:auto !important}
