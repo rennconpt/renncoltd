@@ -44,6 +44,6 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 .hero-slider img{object-fit:cover !important}
 
 
-/* r23-clean3: force hero slider to fill width */
-.hero-slider{width:100%;display:block;aspect-ratio:1200/650}
-.hero-slider img{width:100%;height:100%;object-fit:cover}
+/* r23-clean3: show full collage images without cropping */
+.hero-slider{background:#0f1117;}
+.hero-slider img{width:100%;height:100%;object-fit:contain !important;background:transparent;}
