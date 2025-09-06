@@ -248,274 +248,64 @@
 })();
 
 
-// r23-clean17: aspect-ratio fitter (no crop, no stretch)
-(function(){
-  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
-  function fit(){
-    const boxW = wrap.clientWidth, boxH = wrap.clientHeight;
-    const imgs = wrap.querySelectorAll('img.hero-img');
-    imgs.forEach(img => {
-      const iw = img.naturalWidth || img.videoWidth || img.width;
-      const ih = img.naturalHeight || img.videoHeight || img.height;
-      if(!iw || !ih || !boxW || !boxH) return;
-      const imgAR = iw/ih, boxAR = boxW/boxH;
-      if(imgAR > boxAR){
-        // image is wider than box -> fit width, limit height
-        img.style.width = '100%';
-        img.style.height = 'auto';
-        img.style.maxHeight = '100%';
-      }else{
-        // image is taller than box -> fit height, limit width
-        img.style.height = '100%';
-        img.style.width = 'auto';
-        img.style.maxWidth = '100%';
-      }
-    });
-  }
-  window.addEventListener('load', fit);
-  window.addEventListener('resize', fit);
-  const ro = new ResizeObserver(fit); ro.observe(wrap);
-})(); 
-
-
-// r23-clean18: background-slide loader + loop (no crop)
-(function(){
-  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
-  const slides = Array.from(wrap.querySelectorAll('.bg-slide'));
-  slides.forEach(s => { const url = s.getAttribute('data-bg'); if(url){ const img = new Image(); img.src = url; s.style.backgroundImage = 'url("'+url+'")'; } });
-  const introSlide = wrap.querySelector('.slide.anim');
-  const intro = document.getElementById('intro-anim');
-
-  let i = -1; // -1 = intro
-
-  function setActive(idx){
-    wrap.querySelectorAll('.bg-slide.active, .slide.anim.active').forEach(el=>el.classList.remove('active'));
-    if(idx === -1){
-      if(introSlide){ introSlide.classList.add('active'); if(intro){ try{ intro.currentTime=0; intro.play(); }catch(e){} } }
-    } else {
-      const s = slides[idx % slides.length]; if(s){ s.classList.add('active'); }
-    }
-  }
-
-  function startLoop(){
-    i = 0;
-    setActive(i);
-    setInterval(()=>{ i = (i+1) % slides.length; setActive(i); }, 4500);
-  }
-
-  if(intro){
-    intro.addEventListener('ended', startLoop, { once:true });
-    // Safety: if 'ended' doesn't fire (mobile), start after 4.5s
-    setTimeout(()=>{
-      if(i === -1){ startLoop(); }
-    }, 5000);
-  }else{
-    startLoop();
-  }
-})(); 
-
-
-// r23-clean19: ensure intro plays first, then loop BG slides; only one visible
-(function(){
-  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
-  const bgSlides = Array.from(wrap.querySelectorAll('.bg-slide'));
-  bgSlides.forEach(s=>{
-    const url = s.getAttribute('data-bg');
-    if(url){ s.style.backgroundImage = 'url("'+url+'")'; const i=new Image(); i.src=url; }
-  });
-  const introSlide = wrap.querySelector('.slide.anim');
-  const intro = document.getElementById('intro-anim');
-
-  let idx = -1; // -1=video
-  function setActive(next){
-    const all = wrap.querySelectorAll('.bg-slide, .slide.anim');
-    all.forEach(el=>el.classList.remove('active'));
-    if(next===-1 && introSlide){ introSlide.classList.add('active'); }
-    else { const s = bgSlides[next % bgSlides.length]; if(s){ s.classList.add('active'); }}
-  }
-
-  function startLoop(){
-    if(bgSlides.length===0) return;
-    idx = 0;
-    setActive(idx);
-    setInterval(()=>{ idx = (idx+1) % bgSlides.length; setActive(idx); }, 4500);
-  }
-
-  // Start with intro
-  setActive(-1);
-  if(intro){
-    intro.muted = true; intro.playsInline = true; intro.autoplay = true;
-    const tryPlay = ()=>{ try{ const p = intro.play(); if(p && p.catch){ p.catch(()=>{}); } }catch(e){} };
-    intro.addEventListener('canplay', tryPlay, {once:true});
-    tryPlay();
-    intro.addEventListener('ended', startLoop, {once:true});
-    // Absolute fallback: start after 5s no matter what
-    setTimeout(()=>{ if(idx===-1){ startLoop(); } }, 5200);
-  } else {
-    startLoop();
-  }
-})(); 
-
-
-// r23-clean20: play intro fully, then remove it; no repeats behind photos
-(function(){
-  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
-
-  // If somehow multiple hero-sliders exist, keep the first and remove the rest
-  const dupes = document.querySelectorAll('#hero-slider'); 
-  if(dupes.length > 1){ for(let i=1;i<dupes.length;i++){ dupes[i].parentNode && dupes[i].parentNode.removeChild(dupes[i]); } }
-
-  const bgSlides = Array.from(wrap.querySelectorAll('.bg-slide'));
-  bgSlides.forEach(s=>{
-    const url = s.getAttribute('data-bg');
-    if(url){ s.style.backgroundImage = 'url("'+url+'")'; const i=new Image(); i.src=url; }
-  });
-  const introSlide = wrap.querySelector('.slide.anim');
-  const intro = document.getElementById('intro-anim');
-
-  let idx = -1; // -1 = intro
-
-  function showOnly(el){
-    wrap.querySelectorAll('.bg-slide, .slide.anim').forEach(e=>e.classList.remove('active'));
-    if(el){ el.classList.add('active'); }
-  }
-
-  function setActiveIndex(i){
-    idx = i;
-    if(i === -1) showOnly(introSlide);
-    else showOnly(bgSlides[i % bgSlides.length]);
-  }
-
-  function startLoop(){
-    if(bgSlides.length===0) return;
-    // Remove intro from DOM completely to avoid any z-order surprises
-    if(intro){ try{ intro.pause(); }catch(e){} }
-    if(introSlide && introSlide.parentNode){ introSlide.parentNode.removeChild(introSlide); }
-    let i = 0;
-    setActiveIndex(i);
-    setInterval(()=>{ i = (i+1) % bgSlides.length; setActiveIndex(i); }, 4500);
-  }
-
-  // Start with intro
-  setActiveIndex(-1);
-
-  if(intro){
-    intro.muted = true; intro.playsInline = true; intro.autoplay = true;
-    const tryPlay = ()=>{ try{ const p=intro.play(); if(p&&p.catch){ p.catch(()=>{}); } }catch(e){} };
-    intro.addEventListener('canplay', tryPlay, {once:true});
-    tryPlay();
-
-    intro.addEventListener('ended', startLoop, { once: true });
-
-    // Fallback uses actual duration (metadata) plus buffer; minimum 7s
-    const setFallback = ()=>{
-      const dur = isFinite(intro.duration) && intro.duration>0 ? intro.duration : 7;
-      const ms = Math.max(7000, Math.round(dur*1000) + 600);
-      setTimeout(()=>{ 
-        // If intro is still present (no 'ended' fired), start loop now
-        if(document.getElementById('intro-anim')) startLoop(); 
-      }, ms);
-    };
-    if(isFinite(intro.duration) && intro.duration>0){ setFallback(); }
-    else { intro.addEventListener('loadedmetadata', setFallback, {once:true}); setTimeout(setFallback, 9000); }
-  } else {
-    startLoop();
-  }
-})(); 
-
-
-// r23-clean21: minimal hero controller
+// === r23 full hero fix controller ===
 (function(){
   const stage = document.getElementById('hero-stage'); if(!stage) return;
-  const vid = document.getElementById('heroVid');
-  const img = document.getElementById('heroImg');
+  const vid   = document.getElementById('heroVid');
+  const img   = document.getElementById('heroImg');
+
   const slides = ['/assets/hero-1.jpg','/assets/hero-2.jpg','/assets/hero-3.jpg'];
+  slides.forEach(src => { const i = new Image(); i.src = src; });
 
-  // Preload
-  const cache = slides.map(src=>{ const i=new Image(); i.src=src; return i; });
+  let loopTimer = null, iPos = 0;
 
-  let timer = null, pos = 0;
-
-  function startImageLoop(){
-    // Hide and remove the video entirely
-    if(vid){
-      try{ vid.pause(); }catch(e){} 
-      if(vid.parentNode){ vid.parentNode.removeChild(vid); }
+  function startCollageLoop(){
+    if (vid && vid.parentNode) {
+      try { vid.pause(); } catch(e){}
+      vid.parentNode.removeChild(vid);
     }
-    // Show the image element
     img.style.display = 'block';
-    img.src = slides[pos];
-    // Rotate
-    timer = setInterval(()=>{
-      pos = (pos+1) % slides.length;
-      img.src = slides[pos];
+    img.src = slides[iPos];
+    loopTimer = setInterval(()=>{
+      iPos = (iPos + 1) % slides.length;
+      img.src = slides[iPos];
     }, 4500);
   }
 
-  // Start with the intro video
-  if(vid){
-    vid.muted = true; vid.playsInline = true; vid.autoplay = true;
-    const tryPlay = ()=>{ try{ const p=vid.play(); if(p&&p.catch){ p.catch(()=>{}); } }catch(e){} };
-    vid.addEventListener('canplay', tryPlay, {once:true});
-    tryPlay();
-
-    // When the video actually ends, switch to images
-    vid.addEventListener('ended', startImageLoop, {once:true});
-
-    // Fallback: wait for real duration (or min 7s) then switch if needed
-    const fallback = ()=>{
-      const dur = (isFinite(vid.duration) && vid.duration>0) ? vid.duration : 7;
-      const ms = Math.max(7000, Math.round(dur*1000) + 400);
-      setTimeout(()=>{
-        if(document.getElementById('heroVid')) startImageLoop();
-      }, ms);
-    };
-    if(isFinite(vid.duration) && vid.duration>0) fallback();
-    else { vid.addEventListener('loadedmetadata', fallback, {once:true}); setTimeout(fallback, 9000); }
-  } else {
-    startImageLoop();
+  function holdFinalFrameThenSwap(){
+    setTimeout(startCollageLoop, 2200); // let end-card breathe
   }
-})(); 
 
+  if (vid) {
+    vid.muted = true;
+    vid.setAttribute('playsinline','');
+    vid.setAttribute('webkit-playsinline','');
+    vid.autoplay = true;
 
-// r23-clean22: stronger mobile autoplay + longer PC hold
-(function(){
-  const vid = document.getElementById('heroVid'); if(!vid) return;
+    const kick = () => { try{ const p = vid.play(); if(p && p.catch) p.catch(()=>{});}catch(e){} };
+    kick();
+    vid.addEventListener('canplay', kick, { once:true });
+    window.addEventListener('touchstart', kick, { once:true, passive:true });
+    window.addEventListener('click', kick, { once:true });
 
-  // Visibility-based play (autoplay only when in view)
-  try{
-    const io = new IntersectionObserver(entries=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){
-          try{ const p = vid.play(); if(p&&p.catch){ p.catch(()=>{}); } }catch(_){}
-        } else {
-          try{ vid.pause(); }catch(_){}
-        }
-      });
-    }, {threshold: 0.25});
-    io.observe(vid);
-  }catch(_){}
+    let ended = false;
+    vid.addEventListener('ended', () => { ended = true; holdFinalFrameThenSwap(); }, { once:true });
 
-  // One-tap user gesture fallback (iOS Safari, some Android)
-  const kick = ()=>{ 
-    try{ const p=vid.play(); if(p&&p.catch){ p.catch(()=>{});} }catch(_){}
-    window.removeEventListener('touchstart', kick, {passive:true});
-    window.removeEventListener('click', kick);
-  };
-  window.addEventListener('touchstart', kick, {passive:true, once:true});
-  window.addEventListener('click', kick, {once:true});
+    const watch = () => {
+      if (!document.getElementById('heroVid')) return;
+      const d = isFinite(vid.duration) ? vid.duration : 0;
+      if (d > 0 && vid.currentTime >= d - 0.06) { holdFinalFrameThenSwap(); return; }
+      requestAnimationFrame(watch);
+    };
+    requestAnimationFrame(watch);
 
-  // Extend fallback duration by +3000ms so it won't cut early on desktop
-  vid.addEventListener('loadedmetadata', ()=>{
-    const dur = (isFinite(vid.duration) && vid.duration>0) ? vid.duration : 7;
-    const ms = Math.max(10000, Math.round(dur*1000) + 3400); // +3.4s cushion
-    setTimeout(()=>{
-      // Only switch if the video is still present (intro hasn't ended naturally)
-      if(document.getElementById('heroVid')){
-        const evt = new Event('ended');
-        vid.dispatchEvent(evt);
-      }
-    }, ms);
-  }, {once:true});
-
+    vid.addEventListener('loadedmetadata', () => {
+      const d = isFinite(vid.duration) && vid.duration > 0 ? vid.duration : 7;
+      setTimeout(() => {
+        if (document.getElementById('heroVid')) holdFinalFrameThenSwap();
+      }, Math.round(d*1000) + 4000);
+    }, { once:true });
+  } else {
+    startCollageLoop();
+  }
 })(); 

@@ -307,98 +307,15 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 .muted{ color:#a9b1bb; }
 
 
-/* r23-clean17: taller hero and ironclad no-crop overrides */
-.hero-slider.simple{height:520px !important}
-@media (max-width:980px){.hero-slider.simple{height:440px !important}}
-@media (max-width:720px){.hero-slider.simple{height:360px !important}}
-@media (max-width:520px){.hero-slider.simple{height:300px !important}}
-
-/* Beat any earlier rules that tried to stretch/crop */
-.hero-slider.simple .slide img.hero-img{
-  object-fit:contain !important;
-  object-position:center center !important;
-  max-width:100% !important;
-  max-height:100% !important;
-  width:auto !important;
-  height:auto !important;
-  display:block !important;
-  margin:auto !important;
-}
-/* Ensure slide is a flex centering box */
-.hero-slider.simple .slide{
-  display:none; align-items:center !important; justify-content:center !important;
-}
-.hero-slider.simple .slide.active{ display:flex !important; }
-
-
-/* r23-clean18: background-image slides (contain, no crop) */
-.hero-slider.simple{background:#0f1117}
-.hero-slider.simple .bg-slide{
-  display:none; position:relative; z-index:1;
-  width:100%; height:100%;
-  background-position:center center;
-  background-repeat:no-repeat;
-  background-size:contain;
-}
-.hero-slider.simple .slide.anim video{
-  width:100%; height:100%; object-fit:cover; display:block; border:0;
-}
-.hero-slider.simple .bg-slide.active{ display:block; }
-
-
-/* r23-clean19: normalize hero stage */
-.card .hero-slider.simple{
-  height:520px;
-  max-width:1100px;
-  margin:0 auto;
-  position:relative;
-  background:#0e1117;
-  border-radius:14px;
-}
-@media (max-width:980px){ .card .hero-slider.simple{ height:440px; } }
-@media (max-width:720px){ .card .hero-slider.simple{ height:360px; } }
-@media (max-width:520px){ .card .hero-slider.simple{ height:300px; } }
-
-.hero-slider.simple .bg-slide,
-.hero-slider.simple .slide.anim{
-  position:absolute; inset:0;
-}
-
-.hero-slider.simple .bg-slide{
-  display:none;
-  background-position:center center;
-  background-repeat:no-repeat;
-  background-size:contain;
-  /* scale up slightly so very thin images don't look tiny */
-  transform:scale(0.96);
-}
-
-.hero-slider.simple .bg-slide.active,
-.hero-slider.simple .slide.anim.active{ display:block; }
-
-/* Make sure only the active is interactable/visible */
-.hero-slider.simple .bg-slide,
-.hero-slider.simple .slide.anim{ opacity:0; transition:opacity .4s ease; }
-.hero-slider.simple .bg-slide.active,
-.hero-slider.simple .slide.anim.active{ opacity:1; }
-
-
-/* r23-clean20: layering & safety */
-.hero-slider.simple{ position:relative; }
-.hero-slider.simple .slide.anim,
-.hero-slider.simple .bg-slide{ position:absolute; inset:0; pointer-events:none; }
-.hero-slider.simple .slide.anim{ z-index:2; }
-.hero-slider.simple .bg-slide{ z-index:1; }
-
-
-/* r23-clean21: clean hero stage */
+/* === r23 full hero fix (no crop, mobile-safe) === */
 #hero-stage{
   position:relative;
   height:520px;
   max-width:1100px;
-  margin:0 auto;
+  margin:18px auto 0;
   background:#0e1117;
   border-radius:14px;
+  overflow:hidden;
 }
 @media (max-width:980px){ #hero-stage{ height:440px; } }
 @media (max-width:720px){ #hero-stage{ height:360px; } }
@@ -408,9 +325,9 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 #hero-stage img{
   position:absolute; inset:0;
   width:100%; height:100%;
-  object-fit:contain; /* keep entire media visible */
-  display:block;
+  object-fit:contain;      /* show entire media */
   background:#0e1117;
+  display:block;
   border:0;
 }
-#heroImg{ display:none; } /* start hidden until video ends */
+#heroImg{ display:none; }
