@@ -339,3 +339,96 @@
   window.addEventListener('touchstart', kick, { once:true, passive:true });
   window.addEventListener('click', kick, { once:true });
 })(); 
+
+
+// r23-full-hero-fixed3: robust intro playback + smooth crossfade collage
+(function(){
+  const stage = document.getElementById('hero-stage'); if(!stage) return;
+  const vid = document.getElementById('heroVid');
+  const imgA = document.getElementById('heroImgA');
+  const imgB = document.getElementById('heroImgB');
+  const kickBtn = document.getElementById('heroKick');
+
+  const slides = ['/assets/hero-1.jpg','/assets/hero-2.jpg','/assets/hero-3.jpg'];
+  slides.forEach(src => { const i = new Image(); i.src = src; });
+
+  let pos = 0, showingA = true, loopTimer = null;
+
+  function crossfadeTo(src){
+    const show = showingA ? imgB : imgA;
+    const hide = showingA ? imgA : imgB;
+    show.src = src;
+    show.classList.add('show');
+    hide.classList.remove('show');
+    showingA = !showingA;
+  }
+
+  function startCollage(){
+    // Remove video entirely to avoid any overlap
+    if(vid && vid.parentNode){ try{vid.pause();}catch(e){} vid.parentNode.removeChild(vid); }
+    // Prime first image
+    imgA.src = slides[pos];
+    imgA.classList.add('show');
+    // Crossfade loop
+    loopTimer = setInterval(()=>{
+      pos = (pos + 1) % slides.length;
+      crossfadeTo(slides[pos]);
+    }, 4500);
+  }
+
+  function holdThenStart(){
+    // Hold last frame ~2.2s for readability, then start collage
+    setTimeout(startCollage, 2200);
+  }
+
+  // Autoplay helpers
+  function tryPlay(){
+    try{
+      const p = vid.play();
+      if(p && p.catch){ p.catch(()=>{}); }
+    }catch(e){}
+  }
+  // If autoplay blocked, show a tap overlay
+  function showKick(){ kickBtn && kickBtn.classList.add('visible'); }
+  function hideKick(){ kickBtn && kickBtn.classList.remove('visible'); }
+
+  if(vid){
+    vid.muted = true; vid.playsInline = true; // iOS/Safari
+    tryPlay();
+    vid.addEventListener('canplay', tryPlay, {once:true});
+    window.addEventListener('touchstart', tryPlay, {once:true, passive:true});
+    window.addEventListener('click', tryPlay, {once:true});
+    if(kickBtn){ kickBtn.addEventListener('click', ()=>{ tryPlay(); }, {once:true}); }
+
+    // If not ready in ~1.2s, reveal the kick overlay
+    setTimeout(()=>{
+      if(document.getElementById('heroVid') && vid.readyState < 3){
+        showKick();
+      }
+    }, 1200);
+
+    // Once playing, hide the kick
+    vid.addEventListener('playing', hideKick);
+
+    // Natural end → hold → collage
+    vid.addEventListener('ended', holdThenStart, {once:true});
+
+    // Frame guard: if we reach last frames, proceed
+    const guard = ()=>{
+      if(!document.getElementById('heroVid')) return;
+      const d = isFinite(vid.duration) ? vid.duration : 0;
+      if(d>0 && vid.currentTime >= d - 0.06){ holdThenStart(); return; }
+      requestAnimationFrame(guard);
+    };
+    requestAnimationFrame(guard);
+
+    // Absolute fallback: if codec fails or stalls → go straight to collage (no blank)
+    vid.addEventListener('error', startCollage, {once:true});
+    vid.addEventListener('stalled', ()=> setTimeout(startCollage, 600), {once:true});
+    setTimeout(()=>{
+      if(document.getElementById('heroVid') && vid.readyState < 2){ startCollage(); }
+    }, 2500);
+  } else {
+    startCollage();
+  }
+})();

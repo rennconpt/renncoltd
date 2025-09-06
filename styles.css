@@ -331,3 +331,22 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
   border:0;
 }
 #heroImg{ display:none; }
+
+
+/* r23 full hero fixed3: smooth crossfade + tap overlay */
+#hero-stage{ position:relative; overflow:hidden }
+#hero-stage .fade-img{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:contain; background:#0e1117;
+  opacity:0; transition:opacity .6s ease;
+}
+#hero-stage .fade-img.show{ opacity:1; }
+
+#heroKick{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  padding:10px 16px; border-radius:999px; font-weight:800;
+  background:rgba(255,255,255,.9); color:#061018; border:1px solid rgba(0,0,0,.25);
+  display:none; z-index:5;
+}
+#heroKick.visible{ display:block; }
