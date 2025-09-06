@@ -131,3 +131,49 @@
     show(isLastPhoto ? 1 : i + 1);
   }, 5000);
 })();
+
+
+// r23-clean11: rock-solid 'intro once' + photo loop; fix autoplay policies
+(function(){
+  const wrap = document.getElementById('hero-slider'); if(!wrap) return;
+  const slides = Array.from(wrap.querySelectorAll('.slide')); if(slides.length < 2) return;
+
+  // Identify intro video explicitly
+  const introSlide = slides[0];
+  const introVid = document.getElementById('intro-anim') || introSlide.querySelector('video');
+  if(introVid){ introVid.removeAttribute('loop'); }
+
+  let i = 0;
+  let introFinished = false;
+
+  function show(n){
+    slides[i].classList.remove('active');
+    const oldVid = slides[i].querySelector('video'); if(oldVid){ try{ oldVid.pause(); }catch(e){} }
+    i = n % slides.length;
+    slides[i].classList.add('active');
+    const newVid = slides[i].querySelector('video');
+    if(newVid){
+      try{
+        newVid.currentTime = 0;
+        const playPromise = newVid.play();
+        if(playPromise && playPromise.catch){ playPromise.catch(()=>{}); }
+      }catch(e){}
+    }
+  }
+
+  // Advance after intro video finishes or after a max timeout
+  if(introVid){
+    introVid.addEventListener('ended', ()=>{ introFinished = true; show(1); });
+    // safety timeout in case 'ended' doesn't fire
+    setTimeout(()=>{ if(!introFinished){ introFinished = True; show(1); } }, 6000);
+  }else{
+    introFinished = true; show(1);
+  }
+
+  // Photo loop only (1..end)
+  setInterval(()=>{
+    if(!introFinished) return;
+    const atEnd = (i >= 1) && (i === slides.length - 1);
+    show(atEnd ? 1 : i + 1);
+  }, 5000);
+})();

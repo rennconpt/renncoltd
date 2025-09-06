@@ -205,3 +205,18 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 
 /* Nuke old absolute rules from earlier builds */
 .hero-slider img, .hero-slider video{position:relative !important; inset:auto !important; transform:none !important}
+
+
+/* r23-clean11: absolute no-crop for collage images on all devices */
+.hero-slider{position:relative;border-radius:16px;overflow:hidden}
+.hero-slider .slide{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+}
+.hero-slider .slide img{
+  max-width:100% !important; max-height:100% !important;
+  width:auto !important; height:auto !important;
+  object-fit:contain !important; object-position:center center !important;
+  position:relative !important; inset:auto !important; transform:none !important;
+}
+/* neutralize any aspect-ratio hacks from earlier */
+.hero-slider .slide img{ aspect-ratio:auto !important; }
