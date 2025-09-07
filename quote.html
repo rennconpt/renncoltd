@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Request a Quote — Rennco Ltd</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body{background:#0a0f14;color:#e7eef7;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    .card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:18px}
+    h1{font-size:clamp(24px,3vw,36px);margin:0 0 12px 0}
+    form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    form .full{grid-column:1/-1}
+    label{font-weight:700;font-size:14px;margin-bottom:6px;display:block}
+    input, textarea, select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:#0f1820;color:#e7eef7}
+    textarea{min-height:140px;resize:vertical}
+    .btn{display:inline-block;padding:12px 18px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);text-decoration:none;color:#0b141a;background:#25d366;font-weight:800}
+    .muted{color:#a9b1bb}
+    @media (max-width:720px){ form{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="btn btn-secondary" style="background:transparent;border:0;padding:0;margin:0">&larr; Back to home</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Request a Quote</h1>
+    <p class="muted">Tell us a few details and we'll get straight back to you.</p>
+
+    <div class="card">
+      <form action="https://formsubmit.co/contact.info@rennco.co.uk" method="POST">
+        <!-- FormSubmit options -->
+        <input type="hidden" name="_subject" value="New quote request from rennco.co.uk">
+        <input type="hidden" name="_next" value="/thank-you.html">
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_captcha" value="false">
+
+        <div>
+          <label for="name">Your name</label>
+          <input id="name" name="name" required autocomplete="name">
+        </div>
+        <div>
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" required autocomplete="tel" pattern="[+0-9 ]+">
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" required autocomplete="email">
+        </div>
+        <div>
+          <label for="postcode">Postcode</label>
+          <input id="postcode" name="postcode" autocomplete="postal-code">
+        </div>
+        <div class="full">
+          <label for="service">What do you need?</label>
+          <select id="service" name="service">
+            <option>General building</option>
+            <option>Renovation</option>
+            <option>Landscaping</option>
+            <option>Patio / driveway</option>
+            <option>Walls / brickwork</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="full">
+          <label for="message">Project details</label>
+          <textarea id="message" name="message" placeholder="Tell us about the property and the work you want done"></textarea>
+        </div>
+        <div class="full" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button type="submit" class="btn">Send request</button>
+          <a class="muted" href="mailto:contact.info@rennco.co.uk?subject=Quote%20request%20via%20website">or email us directly</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
