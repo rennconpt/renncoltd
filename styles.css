@@ -369,3 +369,31 @@ html{ scroll-behavior: smooth; }
 @media (max-width:520px){
   #whatsapp-float, .whatsapp-float{ bottom: 14px !important; right: 14px !important; }
 }
+
+
+/* fixed4-patched2: responsive nav + safe floating WhatsApp + global smooth scroll */
+html{ scroll-behavior: smooth; }
+
+/* Top nav row: allow wrapping on small screens */
+.nav, .topnav, header nav, .nav-links{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap: 10px;
+}
+header nav a, .nav a, .topnav a, .nav-links a{
+  padding: 8px 10px;
+  white-space:nowrap;
+}
+@media (max-width: 560px){
+  header nav a, .nav a, .topnav a, .nav-links a{ padding:6px 8px; font-size:14px; }
+}
+
+/* Floating WhatsApp: safe-area aware and always inside viewport */
+#whatsapp-float, .whatsapp-float{
+  position: fixed !important;
+  bottom: max(16px, env(safe-area-inset-bottom) + 12px) !important;
+  right:  max(16px, env(safe-area-inset-right) + 12px) !important;
+  z-index: 9999 !important;
+  transform: none !important;
+}
