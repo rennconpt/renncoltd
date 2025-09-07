@@ -13,7 +13,12 @@
   <a class="brand" href="/index.html"><img class="logo" src="/assets/logo.png" alt="Rennco Ltd logo"><span>Rennco Ltd</span></a>
   <nav class="nav"><a href="/index.html">Home</a><a href="/services.html">Services</a><a href="/gallery.html">Gallery</a><a href="/contact.html">Contact</a></nav>
 </div></header>
-<main><section class="section"><div class="container">
+<main>
+  <h1 class="page-title">See our work</h1>
+  <div id="workGrid" class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:28px"></div>
+  <h1 class="page-title">3D Image Gallery</h1>
+  <div id="designGrid" class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:16px"></div>
+<section class="section"><div class="container">
   
   <div class="cta-row" style="margin:6px 0 14px 0">
     <a class="btn ghost" href="#work" style="text-decoration:none">See Our Work</a>
@@ -48,4 +53,29 @@
   <p><strong>Email:</strong> <a href="mailto:contact.info@rennco.co.uk">contact.info@rennco.co.uk</a> &nbsp;•&nbsp; <strong>Ben (WhatsApp):</strong> <a href="https://wa.me/447885639245">+447885639245</a> &nbsp;•&nbsp; <strong>Nathan:</strong> <a href="tel:+447464723943">+447464723943</a></p>
 </div></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
-<a class="fab-whatsapp" href="https://wa.me/447885639245" target="_blank" aria-label="Chat on WhatsApp"><img src="/assets/icon-whatsapp.svg" alt=""> <span>Chat with us</span></a><script src='/script.js'></script></body></html>
+<a class="fab-whatsapp" href="https://wa.me/447885639245" target="_blank" aria-label="Chat on WhatsApp"><img src="/assets/icon-whatsapp.svg" alt=""> <span>Chat with us</span></a><script src='/script.js'></script>
+<script>
+(function(){
+  function loadImages(containerSel, basePath, max=200){
+    const wrap = document.querySelector(containerSel);
+    if(!wrap) return;
+    for(let i=1;i<=max;i++){
+      const url = basePath + i + '.jpg';
+      const img = new Image();
+      img.onload = ()=>{
+        const card = document.createElement('div');
+        card.className = 'card';
+        const el = document.createElement('img');
+        el.src = url; el.alt = 'Rennco gallery';
+        el.style.width='100%'; el.style.height='auto'; el.style.borderRadius='14px'; el.style.display='block';
+        card.appendChild(el); wrap.appendChild(card);
+      };
+      img.src = url;
+    }
+  }
+  loadImages('#workGrid','/assets/work/');
+  loadImages('#designGrid','/assets/3d/');
+})();
+</script>
+
+</body></html>

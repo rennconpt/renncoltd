@@ -356,63 +356,16 @@ a{color:var(--brand)}.container{width:min(1100px,92%);margin-inline:auto}
 #hero-stage .fade-img{ transition: opacity .8s ease; }
 
 
-/* r23 full hero fixed5: ensure video matches collage image size */
-#hero-stage video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: #0e1117;
-  display: block;
-}
+/* fixed4-patched: keep WhatsApp button inside viewport and enable smooth scroll */
+html{ scroll-behavior: smooth; }
 
-
-/* r23 full hero fixed6: ultra-specific video sizing to match images */
-#hero-stage > video#heroVid {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: contain !important;
-  background: #0e1117 !important;
-  display: block !important;
-  z-index: 1 !important;
+#whatsapp-float, .whatsapp-float{
+  position: fixed !important;
+  bottom: 18px !important;
+  right: 18px !important;
+  z-index: 9999 !important;
+  transform: none !important;
 }
-/* Ensure image layers sit above when shown */
-#hero-stage .fade-img.show { z-index: 2 !important; }
-
-
-/* r23 full hero fixed7: identical sizing for video & photos via shared box */
-#hero-stage{ position:relative; overflow:hidden }
-#hero-box{
-  position:absolute;
-  inset:0;
-  /* Create identical visual inset for both video & images (tweak as needed) */
-  padding: 0 3.5%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#0e1117;
+@media (max-width:520px){
+  #whatsapp-float, .whatsapp-float{ bottom: 14px !important; right: 14px !important; }
 }
-#hero-box video,
-#hero-box img{
-  position:relative !important;
-  width:100% !important;
-  height:100% !important;
-  max-width:100% !important;
-  max-height:100% !important;
-  object-fit:contain !important;
-  display:block !important;
-  background:#0e1117 !important;
-  border:0 !important;
-}
-#hero-box img.fade-img{
-  position:absolute !important;
-  inset:0 !important;
-  opacity:0; transition:opacity .8s ease;
-}
-#hero-box img.fade-img.show{ opacity:1; }
-#hero-stage .fade-img.show { z-index: 2 !important; }
