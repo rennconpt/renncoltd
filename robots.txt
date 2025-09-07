@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.rennco.co.uk/sitemap.xml
+
+Sitemap: https://rennco.co.uk/sitemap.xml
